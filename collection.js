@@ -3,14 +3,14 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         define(['intl-collator', 'lodash', 'backbone', 'url-parametrized', 'backbone-model', 'backbone-prototype-compatibility'], function (Collator, lodash, Backbone, UrlParametrized) {
-            return Backbone.ModelEx = factory(Collator, lodash, Backbone.Collection, Backbone.Model, Backbone.ModelEx, UrlParametrized, Backbone.compatiblity);
+            return Backbone.ModelEx = factory(Collator, lodash, Backbone.Collection, Backbone.Model, Backbone.ModelEx, UrlParametrized, Backbone.compatibility);
         });
 
     } else if (typeof exports !== 'undefined') {
-        Backbone.CollectionEx = factory(root.Intl.Collator, lodash, root.Backbone.Collection, root.Backbone.Model, root.Backbone.ModelEx, root.UrlParametrized, root.Backbone.compatiblity);
+        Backbone.CollectionEx = factory(root.Intl.Collator, lodash, root.Backbone.Collection, root.Backbone.Model, root.Backbone.ModelEx, root.UrlParametrized, root.Backbone.compatibility);
 
     } else {
-        Backbone.CollectionEx = factory(root.Intl.Collator, lodash, root.Backbone.Collection, root.Backbone.Model, root.Backbone.ModelEx, root.UrlParametrized, root.Backbone.compatiblity);
+        Backbone.CollectionEx = factory(root.Intl.Collator, lodash, root.Backbone.Collection, root.Backbone.Model, root.Backbone.ModelEx, root.UrlParametrized, root.Backbone.compatibility);
     }
 }(this, function (Collator, lodash, BackboneCollection, BackboneModel, BackboneModelEx, UrlParametrized, compatibility) {
     var collator   = undefined;
