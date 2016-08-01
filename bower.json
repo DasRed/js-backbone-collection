@@ -1,0 +1,21 @@
+{
+    "name": "backbone-collection",
+    "homepage": "https://github.com/DasRed/js-backbone-collection",
+    "main": "",
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "backbone": "1.*",
+        "backbone-model": "1.*",
+        "lodash": "4.*",
+        "intl-collator": "*",
+        "url-parametrized": "1.*",
+        "backbone-prototype-compatibility": "1.*"
+    }
+}
