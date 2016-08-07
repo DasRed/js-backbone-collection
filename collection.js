@@ -7,10 +7,10 @@
         });
 
     } else if (typeof exports !== 'undefined') {
-        Backbone.CollectionEx = factory(root.Intl.Collator, lodash, root.Backbone.Collection, root.Backbone.Model, root.Backbone.ModelEx, root.UrlParametrized, root.Backbone.compatibility);
+        root.Backbone.CollectionEx = factory(root.Intl.Collator, root.lodash, root.Backbone.Collection, root.Backbone.Model, root.Backbone.ModelEx, root.UrlParametrized, root.Backbone.compatibility);
 
     } else {
-        Backbone.CollectionEx = factory(root.Intl.Collator, lodash, root.Backbone.Collection, root.Backbone.Model, root.Backbone.ModelEx, root.UrlParametrized, root.Backbone.compatibility);
+        root.Backbone.CollectionEx = factory(root.Intl.Collator, root.lodash, root.Backbone.Collection, root.Backbone.Model, root.Backbone.ModelEx, root.UrlParametrized, root.Backbone.compatibility);
     }
 }(this, function (Collator, lodash, BackboneCollection, BackboneModel, BackboneModelEx, UrlParametrized, compatibility) {
     var collator   = undefined;
