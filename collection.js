@@ -307,6 +307,37 @@
         }
     });
 
+    /**
+     * creates the model instance
+     * @param {Object} attrs
+     * @param {Object} options
+     * @return {BackboneModelEx}
+     */
+    Collection.prototype.createModelInstance = function (attrs, options) {
+        return new this.model(attrs, options);
+    };
+
+    /**
+     * Prepare a hash of attributes (or other model) to be added to this collection.
+     *
+     * @param attrs
+     * @param options
+     * @return {*}
+     * @private
+     */
+    Collection.prototype._prepareModel = function (attrs, options) {
+        if (this._isModel(attrs)) {
+            if (!attrs.collection) attrs.collection = this;
+            return attrs;
+        }
+
+        options            = options ? _.clone(options) : {};
+        options.collection = this;
+        var model          = this.createModelInstance(attrs, options);
+        if (!model.validationError) return model;
+        this.trigger('invalid', this, model.validationError, options);
+        return false;
+    };
 
     /**
      * @param {BackboneModelEx} model
