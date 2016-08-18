@@ -308,6 +308,31 @@
     });
 
     /**
+     * retrieves a model or if not exists fetchs the model
+     *
+     * @param {*} id
+     * @return {BackboneModelEx}
+     */
+    Collection.prototype.getFetch = function (id) {
+        var model = this.get(id);
+        if (model !== undefined) {
+            return model;
+        }
+
+        var options = {};
+        options[this.model.prototype.idAttribute] = id;
+
+        model = this.createModelInstance(options);
+        model.fetch({
+            async: false
+        });
+
+        this.push(model);
+
+        return model;
+    };
+
+    /**
      * creates the model instance
      * @param {Object} attrs
      * @param {Object} options
