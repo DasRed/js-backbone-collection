@@ -95,7 +95,7 @@
      * @event {void} fetched({Collection} collection)
      * @event {void} sort:comparator:changed({Collection} collection, {String} comparatorNew, {String} comparatorOld)
      * @event {void} sort:direction:changed({Collection} collection, {String} directionNew, {String} directionOld)
-     * @param {Array} models
+     * @param {Array.<BackboneModelEx>=} models
      * @param {Object} options
      */
     function Collection(models, options) {
@@ -145,7 +145,7 @@
         },
 
         /**
-         * @var {String}|{Array}
+         * @var {String|Array}
          */
         comparator: {
             enumerable: true,
@@ -171,7 +171,7 @@
         /**
          * current direction
          *
-         * @var {String}|{Array}
+         * @var {String|Array}
          */
         direction: {
             enumerable: true,
@@ -406,7 +406,7 @@
     /**
      * create with default wait
      *
-     * @param {BackboneModelEx} key
+     * @param {BackboneModelEx} model
      * @param {Object} options
      * @returns {Collection}
      */
@@ -503,7 +503,7 @@
     };
 
     /**
-     * save method for the whole colleciton
+     * save method for the whole collection
      *
      * @param {Object} options
      * @returns {Collection}
@@ -547,7 +547,7 @@
     /**
      * improved BackboneCollection.set function... taken from BackboneCollection and improved some code parts
      *
-     * @param {Array} models
+     * @param {Array.<BackboneModelEx>=} models
      * @param {Object} options
      * @returns {Array}
      */
