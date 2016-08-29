@@ -477,6 +477,10 @@
             buildIndexMap(this);
         }
 
+        if (typeof model !== 'object') {
+            model = this.get(model);
+        }
+
         var index = this._indexMap[model.cid];
         if (index === this.models.length - 1) {
             return undefined;
@@ -492,6 +496,10 @@
     Collection.prototype.getPrevious = function (model) {
         if (this._indexMap === null) {
             buildIndexMap(this);
+        }
+
+        if (typeof model !== 'object') {
+            model = this.get(model);
         }
 
         var index = this._indexMap[model.cid];
