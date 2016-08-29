@@ -481,6 +481,10 @@
             model = this.get(model);
         }
 
+        if (model === undefined) {
+            return undefined;
+        }
+
         var index = this._indexMap[model.cid];
         if (index === this.models.length - 1) {
             return undefined;
@@ -500,6 +504,10 @@
 
         if (typeof model !== 'object') {
             model = this.get(model);
+        }
+
+        if (model === undefined) {
+            return undefined;
         }
 
         var index = this._indexMap[model.cid];
