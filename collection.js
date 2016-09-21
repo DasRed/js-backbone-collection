@@ -12,7 +12,7 @@
     } else {
         root.Backbone.CollectionEx = factory(root.Intl.Collator, root.lodash, root.Backbone.Collection, root.Backbone.Model, root.Backbone.ModelEx, root.UrlParametrized, root.Backbone.compatibility);
     }
-}(this, function (Collator, lodash, BackboneCollection, BackboneModel, BackboneModelEx, UrlParametrized, compatibility) {
+}(this, function (Collator, lodash, BackboneCollection, BackboneModel, Model, UrlParametrized, compatibility) {
     var collator   = undefined;
     var setOptions = {
         add: true,
@@ -34,8 +34,8 @@
     /**
      * @param {String} propertyName
      * @param {String} direction
-     * @param {BackboneModelEx} modelA
-     * @param {BackboneModelEx} modelB
+     * @param {Model} modelA
+     * @param {Model} modelB
      * @returns {Number}
      */
     function compare(propertyName, direction, modelA, modelB) {
@@ -45,7 +45,7 @@
         var result = 0;
 
         // use natural sort for strings
-        if (modelA.attributeTypes[propertyName] === BackboneModelEx.ATTRIBUTE_TYPE_STRING || modelB.attributeTypes[propertyName] === BackboneModelEx.ATTRIBUTE_TYPE_STRING) {
+        if (modelA.attributeTypes[propertyName] === Model.ATTRIBUTE_TYPE_STRING || modelB.attributeTypes[propertyName] === Model.ATTRIBUTE_TYPE_STRING) {
             if (collator === undefined) {
                 collator = new Collator();
             }
@@ -53,7 +53,7 @@
             result = collator.compare(valueA, valueB);
         }
         // compare time
-        else if (modelA.attributeTypes[propertyName] === BackboneModelEx.ATTRIBUTE_TYPE_TIME && modelB.attributeTypes[propertyName] === BackboneModelEx.ATTRIBUTE_TYPE_TIME) {
+        else if (modelA.attributeTypes[propertyName] === Model.ATTRIBUTE_TYPE_TIME && modelB.attributeTypes[propertyName] === Model.ATTRIBUTE_TYPE_TIME) {
             var valueATime = valueA.getHours() * 60 * 60 * 1000;
             valueATime += valueA.getMinutes() * 60 * 1000;
             valueATime += valueA.getSeconds() * 1000;
@@ -95,13 +95,13 @@
      * @event {void} fetched({Collection} collection)
      * @event {void} sort:comparator:changed({Collection} collection, {String} comparatorNew, {String} comparatorOld)
      * @event {void} sort:direction:changed({Collection} collection, {String} directionNew, {String} directionOld)
-     * @param {Array.<BackboneModelEx>=} models
+     * @param {Array.<Model>=} models
      * @param {Object} options
      */
     function Collection(models, options) {
         // copy options
         if (options !== undefined && options !== null) {
-            var key = undefined;
+            var key;
             for (key in options) {
                 if (this[key] !== undefined) {
                     this[key] = options[key];
@@ -179,7 +179,7 @@
             get: function () {
                 // set the direction if not setted
                 if (this._direction === undefined) {
-                    if (typeof this.comparator === 'array') {
+                    if (this.comparator instanceof Array) {
                         return [Collection.DIRECTION_ASC];
                     }
 
@@ -187,17 +187,17 @@
 
                     switch (true) {
                         // sort by another collection can not work
-                        case attributeType === BackboneModelEx.ATTRIBUTE_TYPE_COLLECTION:
+                        case attributeType === Model.ATTRIBUTE_TYPE_COLLECTION:
                             throw new Error('Sorting for an attribute of type collection is not allowed.');
 
                         // sort by another model can not work
-                        case attributeType === BackboneModelEx.ATTRIBUTE_TYPE_MODEL:
+                        case attributeType === Model.ATTRIBUTE_TYPE_MODEL:
                             throw new Error('Sorting for an attribute of type model is not allowed.');
 
                         // sort by date always sort DESC
-                        case attributeType === BackboneModelEx.ATTRIBUTE_TYPE_DATE:
-                        case attributeType === BackboneModelEx.ATTRIBUTE_TYPE_DATETIME:
-                        case attributeType === BackboneModelEx.ATTRIBUTE_TYPE_TIME:
+                        case attributeType === Model.ATTRIBUTE_TYPE_DATE:
+                        case attributeType === Model.ATTRIBUTE_TYPE_DATETIME:
+                        case attributeType === Model.ATTRIBUTE_TYPE_TIME:
                             this._direction = Collection.DIRECTION_DESC;
                             break;
 
@@ -260,10 +260,20 @@
         /**
          * default model for data
          *
-         * @var {BackboneModelEx}
+         * @var {Function}
          */
         model: {
             value: null,
+            enumerable: true,
+            configurable: true,
+            writable: true
+        },
+
+        /**
+         * @var {Boolean}
+         */
+        resettable: {
+            value: true,
             enumerable: true,
             configurable: true,
             writable: true
@@ -311,7 +321,7 @@
      * retrieves a model or if not exists fetchs the model
      *
      * @param {*} id
-     * @return {BackboneModelEx}
+     * @return {Model}
      */
     Collection.prototype.getFetch = function (id) {
         var model = this.get(id);
@@ -319,7 +329,7 @@
             return model;
         }
 
-        var options = {};
+        var options                               = {};
         options[this.model.prototype.idAttribute] = id;
 
         model = this.createModelInstance(options);
@@ -335,8 +345,8 @@
     /**
      * creates the model instance
      * @param {Object} attrs
-     * @param {Object} options
-     * @return {BackboneModelEx}
+     * @param {Object} [options]
+     * @return {Model}
      */
     Collection.prototype.createModelInstance = function (attrs, options) {
         return new this.model(attrs, options);
@@ -348,7 +358,7 @@
      * @param attrs
      * @param options
      * @return {*}
-     * @private
+     * @internal
      */
     Collection.prototype._prepareModel = function (attrs, options) {
         if (this._isModel(attrs)) {
@@ -365,8 +375,9 @@
     };
 
     /**
-     * @param {BackboneModelEx} model
+     * @param {Model} model
      * @param {Object} options
+     * @internal
      */
     Collection.prototype._addReference = function (model, options) {
         this._indexMap = null;
@@ -374,8 +385,9 @@
     };
 
     /**
-     * @param {BackboneModelEx} model
+     * @param {Model} model
      * @param {Object} options
+     * @internal
      */
     Collection.prototype._removeReference = function (model, options) {
         this._indexMap = null;
@@ -384,21 +396,23 @@
 
     /**
      * reset of collection with full model destroy
-     *
      * @returns {Collection}
+     * @internal
      */
     Collection.prototype._reset = function () {
-        this._indexMap = null;
+        if ((this.models instanceof Array) === false || this.resettable === true) {
+            this._indexMap = null;
 
-        if (this.models !== undefined && this.models !== null) {
-            var i      = 0;
-            var length = this.models.length;
-            for (i = 0; i < length; i++) {
-                this.models[i].clearFromMemory();
+            if (this.models !== undefined && this.models !== null) {
+                var i;
+                var length = this.models.length;
+                for (i = 0; i < length; i++) {
+                    this.models[i].clearFromMemory();
+                }
             }
-        }
 
-        BackboneCollection.prototype._reset.apply(this, arguments);
+            BackboneCollection.prototype._reset.apply(this, arguments);
+        }
 
         return this;
     };
@@ -406,7 +420,7 @@
     /**
      * create with default wait
      *
-     * @param {BackboneModelEx} model
+     * @param {Model} model
      * @param {Object} options
      * @returns {Collection}
      */
@@ -469,8 +483,8 @@
     };
 
     /**
-     * @param {BackboneModelEx} model
-     * @returns {BackboneModelEx}
+     * @param {Model} model
+     * @returns {Model}
      */
     Collection.prototype.getNext = function (model) {
         if (this._indexMap === null) {
@@ -494,8 +508,8 @@
     };
 
     /**
-     * @param {BackboneModelEx} model
-     * @returns {BackboneModelEx}
+     * @param {Model} model
+     * @returns {Model}
      */
     Collection.prototype.getPrevious = function (model) {
         if (this._indexMap === null) {
@@ -516,6 +530,25 @@
         }
 
         return this.models[index - 1];
+    };
+
+    /**
+     *
+     * @param {Array|Model|Object} models
+     * @param {Object} [options]
+     * @return {Collection}
+     */
+    Collection.prototype.reset = function (models, options) {
+        if (this.resettable === true) {
+            return BackboneCollection.prototype.reset.apply(this, arguments);
+        }
+
+        this.set(models, Object.assign(options, {
+            remove: false,
+            merge: true
+        }));
+
+        return models;
     };
 
     /**
@@ -563,7 +596,7 @@
     /**
      * improved BackboneCollection.set function... taken from BackboneCollection and improved some code parts
      *
-     * @param {Array.<BackboneModelEx>=} models
+     * @param {Array.<Model>=} models
      * @param {Object} options
      * @returns {Array}
      */
@@ -588,13 +621,13 @@
             models = this.parse(models, options);
         }
 
-        var i                = undefined;
-        var l                = undefined;
-        var id               = undefined;
-        var model            = undefined;
-        var attrs            = undefined;
-        var existing         = undefined;
-        var sort             = undefined;
+        var i;
+        var l;
+        var id;
+        var model;
+        var attrs;
+        var existing;
+        var sort;
         var at               = options.at;
         var targetModel      = this.model;
         var sortable         = this.comparator && (at == null) && options.sort !== false;
@@ -741,9 +774,9 @@
             }
 
             this.models.sort(function (modelA, modelB) {
-                var result             = undefined;
-                var propertyNameToSort = undefined;
-                var directionToSort    = undefined;
+                var result;
+                var propertyNameToSort;
+                var directionToSort;
 
                 for (var i = 0; i < propertyName.length; i++) {
                     propertyNameToSort = propertyName[i];
