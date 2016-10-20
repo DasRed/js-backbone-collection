@@ -95,8 +95,8 @@
      * @event {void} fetched({Collection} collection)
      * @event {void} sort:comparator:changed({Collection} collection, {String} comparatorNew, {String} comparatorOld)
      * @event {void} sort:direction:changed({Collection} collection, {String} directionNew, {String} directionOld)
-     * @param {Array.<Model>=} models
-     * @param {Object} options
+     * @param {Array.<Model>=} [models]
+     * @param {Object} [options]
      */
     function Collection(models, options) {
         // copy options
@@ -344,7 +344,7 @@
 
     /**
      * creates the model instance
-     * @param {Object} attrs
+     * @param {Object} [attrs]
      * @param {Object} [options]
      * @return {Model}
      */
@@ -355,8 +355,8 @@
     /**
      * Prepare a hash of attributes (or other model) to be added to this collection.
      *
-     * @param attrs
-     * @param options
+     * @param {Model|Object} attrs
+     * @param {Object} options
      * @return {*}
      * @internal
      */
@@ -421,7 +421,8 @@
      * create with default wait
      *
      * @param {Model} model
-     * @param {Object} options
+     * @param {Object} [options]
+     * @param {Boolean} [options.wait]
      * @returns {Collection}
      */
     Collection.prototype.create = function (model, options) {
@@ -445,7 +446,9 @@
     };
 
     /**
-     * @param {Object} options
+     * @param {Object} [options]
+     * @param {Boolean} [options.silent]
+     * @param {Function} [options.complete]
      * @returns {Collection}
      */
     Collection.prototype.fetch = function (options) {
@@ -554,7 +557,11 @@
     /**
      * save method for the whole collection
      *
-     * @param {Object} options
+     * @param {Object} [options]
+     * @param {Boolean} [options.parse]
+     * @param {Function} [options.success]
+     * @param {Function} [options.complete]
+     * @param {Boolean} [options.reset]
      * @returns {Collection}
      */
     Collection.prototype.save = function (options) {
@@ -597,7 +604,14 @@
      * improved BackboneCollection.set function... taken from BackboneCollection and improved some code parts
      *
      * @param {Array.<Model>=} models
-     * @param {Object} options
+     * @param {Object} [options]
+     * @param {Boolean} [options.parse]
+     * @param {Number} [options.at]
+     * @param {Boolean} [options.sort]
+     * @param {Boolean} [options.add]
+     * @param {Boolean} [options.merge]
+     * @param {Boolean} [options.remove]
+     * @param {Boolean} [options.silent]
      * @returns {Array}
      */
     Collection.prototype.set = function (models, options) {
@@ -752,7 +766,8 @@
      * is added.
      *
      * overwritten to implement natural sort
-     * @param {Object} options
+     * @param {Object} [options]
+     * @param {Boolean} [options.silent]
      * @returns {Collection}
      */
     Collection.prototype.sort = function (options) {
