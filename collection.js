@@ -429,6 +429,10 @@
         options      = options || {};
         options.wait = options.wait !== undefined ? options.wait : this.waitDefault;
 
+        if (lodash.isPlainObject(model) === true) {
+            model = this.createModelInstance(model, options);
+        }
+
         // fixing model url if wait is true... if the model has no url root
         // and wait ist true, the model will be added AFTER save on server
         // but this cause in an error in Backbone, because the model save method will be called
