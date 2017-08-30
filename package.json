@@ -1,0 +1,24 @@
+{
+  "name": "js-backbone-collection",
+  "version": "1.1.4",
+  "description": "Better improved handling for backbone collections and models.",
+  "main": "model.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DasRed/js-backbone-collection.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DasRed/js-backbone-collection/issues"
+  },
+  "homepage": "https://github.com/DasRed/js-backbone-collection#readme",
+  "dependencies": {
+      "lodash": "^4.14.1",
+      "backbone": "^1.3.3",
+      "js-backbone-model": "^1.2.4",
+      "intl-collator": "^0.1.6",
+      "url-parametrized": "^1.0.5",
+      "backbone-prototype-compatibility": "^1.0.5"
+  }
+}

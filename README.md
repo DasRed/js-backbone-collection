@@ -8,6 +8,7 @@ Provides more flexibility and functionality for backbone collections
 ## Install
 ```
 bower install backbone-collection --save
+npm install js-backbone-collection --save
 ```
 
 ## Options
