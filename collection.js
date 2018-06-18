@@ -103,9 +103,7 @@
         if (options !== undefined && options !== null) {
             var key;
             for (key in options) {
-                if (this[key] !== undefined) {
-                    this[key] = options[key];
-                }
+                this[key] = options[key];
             }
         }
 
