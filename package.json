@@ -1,6 +1,6 @@
 {
   "name": "js-backbone-collection",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Better improved handling for backbone collections and models.",
   "main": "collection.js",
   "repository": {
