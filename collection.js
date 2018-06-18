@@ -175,13 +175,18 @@
             enumerable: true,
             configurable: true,
             get: function () {
+                var model = this.at(0);
+                if (model === undefined) {
+                    return [Collection.DIRECTION_ASC];
+                }
+
                 // set the direction if not setted
                 if (this._direction === undefined) {
                     if (this.comparator instanceof Array) {
                         return [Collection.DIRECTION_ASC];
                     }
 
-                    var attributeType = this.model.getPrototypeValue('attributeTypes')[this.comparator];
+                    var attributeType = model.attributeTypes[this.comparator];
 
                     switch (true) {
                         // sort by another collection can not work
